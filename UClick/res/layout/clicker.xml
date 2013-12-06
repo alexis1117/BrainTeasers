@@ -9,6 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="35dp"
         android:background="@drawable/menu_bg" >
+        
 
         <TextView
             android:id="@+id/clik_qzname"
@@ -115,9 +116,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:background="@drawable/btn_round"
+            android:background="@drawable/btn_round_"
             android:text="A"
-            android:textColor="@color/txt"
+            android:textColor="#FFFFFF"
             android:textColorHint="@color/txtcolor1"
             android:textSize="@dimen/anssize"
             android:textStyle="bold"
@@ -130,9 +131,9 @@
             android:layout_height="70dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/btn_round"
+            android:background="@drawable/btn_round_"
             android:text="B"
-            android:textColor="@color/txt"
+            android:textColor="#FFFFFF"
             android:textSize="@dimen/anssize"
             android:textStyle="bold"
             android:typeface="serif" />
@@ -142,9 +143,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:background="@drawable/btn_round"
+            android:background="@drawable/btn_round_"
             android:text="C"
-            android:textColor="@color/txt"
+            android:textColor="#FFFFFF"
             android:textSize="20dp"
             android:textStyle="bold"
             android:typeface="serif" />
@@ -163,9 +164,9 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/btn_round"
+            android:background="@drawable/btn_round_"
             android:text="D"
-            android:textColor="@color/txt"
+            android:textColor="#FFFFFF"
             android:textSize="@dimen/anssize"
             android:textStyle="bold"
             android:typeface="serif" />
@@ -178,9 +179,9 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/btn_round"
+            android:background="@drawable/btn_round_"
             android:text="E"
-            android:textColor="@color/txt"
+            android:textColor="#FFFFFF"
             android:textSize="@dimen/anssize"
             android:textStyle="bold"
             android:typeface="serif" />
@@ -191,9 +192,9 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/btn_round"
+            android:background="@drawable/btn_round_"
             android:text="F"
-            android:textColor="@color/txt"
+            android:textColor="#FFFFFF"
             android:textSize="@dimen/anssize"
             android:textStyle="bold"
             android:typeface="serif" />
@@ -230,5 +231,18 @@
             android:textSize="@dimen/btntxtsize"
             android:typeface="serif" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/clik_ans"
+        android:layout_marginLeft="15dp"
+        android:fontFamily="Verdana"
+        android:paddingRight="40dip"
+        android:text="Time: "
+        android:textColor="@color/txt"
+        android:textSize="15sp" />
 
 </RelativeLayout>

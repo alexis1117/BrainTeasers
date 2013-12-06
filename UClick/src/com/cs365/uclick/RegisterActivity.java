@@ -6,6 +6,8 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.os.ParcelableCompat;
@@ -60,8 +62,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				if (!MyRegex.isEmailValid(s.toString()))
-					email.setError("");
+//				if (!MyRegex.isEmailValid(s.toString()))
+//					email.setError("");
 			}
 		});
 
@@ -84,8 +86,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				if (!MyRegex.isValidPassword(s.toString()))
-					pass1.setError("");
+//				if (!MyRegex.isValidPassword(s.toString()))
+//					pass1.setError("");
 			}
 		});
 
@@ -108,8 +110,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				if (!MyRegex.isValidPassword(s.toString()))
-					pass2.setError("");
+//				if (!MyRegex.isValidPassword(s.toString()))
+//					pass2.setError("");
 			}
 		});
 
@@ -168,10 +170,36 @@ public class RegisterActivity extends Activity implements OnClickListener {
 				} else {
 					pass1.setText("");
 					pass2.setText("");
-					Toast.makeText(this, "Passwords don't match!",
-							Toast.LENGTH_SHORT).show();
+					
 				}
 
+			}else if  (!(spass1.equals(spass2))){Toast.makeText(this, "Passwords don't match!",
+					Toast.LENGTH_SHORT).show();
+				
+			}else if  (!MyRegex.isValidPassword(spass1)){Toast.makeText(this, "Passwords is invalid.(6-20 characters + digits",
+					Toast.LENGTH_SHORT).show();
+				
+			}
+			else if(!(MyRegex.isEmailValid(semail))){Toast.makeText(this, "Email is invalid!",
+					Toast.LENGTH_SHORT).show();}
+			
+			else{
+				AlertDialog.Builder alertDialog1 = new AlertDialog.Builder(this);
+
+				alertDialog1.setTitle("Sign up failed");
+				alertDialog1.setMessage("Please enter all fields correctly");
+
+				alertDialog1.setIcon(R.drawable.ic_launcher);
+
+				alertDialog1.setNeutralButton("OK",
+						new DialogInterface.OnClickListener() {
+
+							public void onClick(DialogInterface dialog, int which) {
+								//startActivity(intent);
+							}
+						});
+
+				alertDialog1.show();
 			}
 
 		}

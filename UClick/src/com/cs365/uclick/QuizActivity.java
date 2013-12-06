@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.cs365.uclick.data.Quiz;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -34,15 +35,17 @@ public class QuizActivity extends Activity implements OnClickListener,
 		OnItemSelectedListener {
 	private Spinner menu;
 	List<String> quizList;
-	List<String> detailList;
+	//List<String> detailList;
 	Map<String, List<String>> quizCollections;
-	ExpandableListView quizView;
+	//ExpandableListView quizView;
 	private EditText searchbox, quizbox;
 	private Button search, start;
 	private boolean tag;
+	private ExpandableListView quizHistory;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quiz);
 
@@ -62,44 +65,8 @@ public class QuizActivity extends Activity implements OnClickListener,
 
 		search.setOnClickListener(this);
 		start.setOnClickListener(this);
-
-		createGroupList();
 		createCollection();
-		quizView = (ExpandableListView) findViewById(R.id.pro_qzlist);
-		final ExpandibleListAdapter expListAdapter = new ExpandibleListAdapter(
-				this, quizList, quizCollections);
-		quizView.setAdapter(expListAdapter);
-	}
 
-	private void createGroupList() {
-		quizList = new ArrayList<String>();
-		quizList.add("19831973");
-		quizList.add("12938107");
-
-	}
-
-	private void createCollection() {
-		String[] quiz1 = { "Date: 11/17/85", "Professor: Raheja",
-				"Subject: CS555", "Description: Midterm", "Points: 20/20" };
-		String[] quiz2 = { "Date: 11/17/85", "Professor: Raheja",
-				"Subject: CS555", "Description: Midterm", "Points: 20/20" };
-
-		quizCollections = new LinkedHashMap<String, List<String>>();
-
-		for (String quiz : quizList) {
-			if (quiz.equals("19831973")) {
-				loadChild(quiz1);
-			} else if (quiz.equals("12938107"))
-				loadChild(quiz2);
-
-			quizCollections.put(quiz, detailList);
-		}
-	}
-
-	private void loadChild(String[] qdetails) {
-		detailList = new ArrayList<String>();
-		for (String detail : qdetails)
-			detailList.add(detail);
 	}
 
 	@Override
@@ -212,4 +179,110 @@ public class QuizActivity extends Activity implements OnClickListener,
 
 	}
 
+	private void createCollection() {
+
+		quizCollections = new LinkedHashMap<String, List<String>>();
+		quizList = new ArrayList<String>();
+
+		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
+				"UserQuizList");
+		query.whereEqualTo(MyData.QUIZ_USER, ParseUser.getCurrentUser());
+		query.findInBackground(new FindCallback<ParseObject>() {
+
+			@Override
+			public void done(List<ParseObject> lists, ParseException e) {
+				// TODO Auto-generated method stub
+				if (lists != null) {
+					for (int i = 0; i < lists.size(); i++) {
+						final ParseObject currentList = lists.get(i);
+						ParseObject currentQuiz = currentList
+								.getParseObject(MyData.QUIZ_QUIZ);
+						ParseQuery<ParseObject> quizes = new ParseQuery<ParseObject>(
+								"Quiz");
+						quizes.getInBackground(currentQuiz.getObjectId(),
+								new GetCallback<ParseObject>() {
+
+									@Override
+									public void done(ParseObject q,
+											ParseException e) {
+										// TODO Auto-generated method stub
+										final List<String> detailList = new ArrayList<String>();
+										String date = "Date: "
+												+ currentList.getCreatedAt()
+														.toLocaleString();
+										detailList.add(date);
+										String description = "Description: "
+												+ q.getString(MyData.DESCRIPTION);
+										detailList.add(description);
+										String result = "Points: "
+												+ currentList
+														.getInt(MyData.QUIZ_RESULT)
+												+ "/" + q.getInt(MyData.QUIZ_N);
+										detailList.add(result);
+										ParseQuery<ParseObject> subjs = new ParseQuery<ParseObject>(
+												"Subject");
+										subjs.getInBackground(
+												q.getParseObject(
+														MyData.QUIZ_SUBJECT)
+														.getObjectId(),
+												new GetCallback<ParseObject>() {
+
+													@Override
+													public void done(
+															ParseObject subj,
+															ParseException e) {
+														// TODO Auto-generated
+														// method stub
+														String subjName = "Subject: "
+																+ subj.getString(MyData.SUBJ_NAME);
+														detailList
+																.add(subjName);
+														ParseQuery<ParseObject> insts = new ParseQuery<ParseObject>(
+																"Instructor");
+														insts.getInBackground(
+																subj.getParseObject(
+																		"toughtBy")
+																		.getObjectId(),
+																new GetCallback<ParseObject>() {
+
+																	@Override
+																	public void done(
+																			ParseObject inst,
+																			ParseException e) {
+																		// TODO
+																		// Auto-generated
+																		// method
+																		// stub
+																		String instructor = "Professor: "
+																				+ inst.getString(MyData.USR_FIRST_NAME)
+																				+ " "
+																				+ inst.getString(MyData.USR_LAST_NAME);
+																		detailList
+																				.add(instructor);
+																	}
+																});
+													}
+												});
+										quizCollections.put(
+												q.getString(MyData.QUIZ_ID),
+												detailList);
+										quizList.add(q
+												.getString(MyData.QUIZ_ID));
+									}
+
+								});
+
+					}
+
+				}
+
+			}
+
+		});
+		quizHistory = (ExpandableListView) findViewById(R.id.qz_qzlist);
+		ExpandibleListAdapter expListAdapter = new ExpandibleListAdapter(this,
+				quizList, quizCollections);
+		quizHistory.setAdapter(expListAdapter);
+
+	}
 }
